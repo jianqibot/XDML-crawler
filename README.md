@@ -1,2 +1,1 @@
-# XDML-crawler
-First project from java training course(crawler &amp; ES data analysis)
+# 多线程爬虫和ES数据分析实战
