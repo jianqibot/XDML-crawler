@@ -23,14 +23,11 @@ public class Main {
     @SuppressFBWarnings("DMI_CONSTANT_DB_PASSWORD")
     public static void main(String[] args) throws IOException, SQLException {
         Connection connection = DriverManager.getConnection("jdbc:h2:file:/home/jianqi/IdeaProjects/XDML-crawler/news", DB_USER_NAME, DB_USER_PASSWORD);
-        List<String> linkPool = loadUrlsFromDB(connection);
-
-        while (!linkPool.isEmpty()) {
-            String link = linkPool.remove(0);
-            removeLinkFromProcessingDB(connection, link);
+        String link;
+        while ((link = getUrlFromProcessingDBThenDelete(connection)) != null) {
             if (!isLinkAlreadyProcessed(connection, link) && meetCriterion(link)) {
                 System.out.println(link);
-                insertLinkIntoProcessedDB(connection, link);
+                addLinkIntoProcessedDB(connection, link);
                 Document doc = httpGetAndParseHtml(link);
                 CollectLinksAndStoreIntoProcessingDB(connection, doc);
                 storeIntoDBIfIsNewsPage(doc);
@@ -45,15 +42,17 @@ public class Main {
         }
     }
 
-    private static List<String> loadUrlsFromDB(Connection connection) throws SQLException {
-        List<String> list = new LinkedList<>();
-        try (PreparedStatement preparedStatement = connection.prepareStatement("select link from LINKS_TO_BE_PROCESSED")) {
+    private static String getUrlFromProcessingDBThenDelete(Connection connection) throws SQLException {
+        String link;
+        try (PreparedStatement preparedStatement = connection.prepareStatement("select link from LINKS_TO_BE_PROCESSED limit 1")) {
             ResultSet resultSet = preparedStatement.executeQuery();
-            while (resultSet.next()) {
-                list.add(resultSet.getString(1));
+            if (resultSet.next()) {
+                link = resultSet.getString(1);
+                removeLinkFromProcessingDB(connection, link);
+                return link;
             }
         }
-        return  list;
+        return  null;
     }
 
     private static void removeLinkFromProcessingDB(Connection connection, String link) throws SQLException {
@@ -66,7 +65,7 @@ public class Main {
     }
 
 
-    private static void insertLinkIntoProcessedDB(Connection connection, String link) throws SQLException {
+    private static void addLinkIntoProcessedDB(Connection connection, String link) throws SQLException {
         updateDB(connection, link, "insert into LINKS_ALREADY_PROCESSED (link) values(?)");
     }
 
@@ -126,7 +125,7 @@ public class Main {
         ArrayList<Element> articleTagLinks = doc.select("article");
         if (!articleTagLinks.isEmpty()) {
             for (Element articleTagLink : articleTagLinks) {
-                String title = articleTagLink.select("h1").text();
+                String title = articleTagLink.child(0).text();
                 System.out.println(title);
             }
         }

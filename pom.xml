@@ -147,6 +147,23 @@
                         </dependency>
                     </dependencies>
             </plugin>
+            <plugin>
+                <groupId>org.flywaydb</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>8.0.0-beta1</version>
+                <configuration>
+                    <url>jdbc:h2:file://home/jianqi/IdeaProjects/XDML-crawler/news</url>
+                    <user>jianqi</user>
+                    <password>jianqi</password>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>1.4.200</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 </project>
