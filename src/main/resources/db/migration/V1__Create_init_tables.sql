@@ -8,7 +8,7 @@ link varchar(1000)
 
 create table NEWS (
 id bigint primary key auto_increment,
-title text,
+title varchar(200),
 content text,
 url varchar(1000),
 created_at timestamp,
