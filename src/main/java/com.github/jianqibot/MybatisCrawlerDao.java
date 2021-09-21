@@ -1,5 +1,6 @@
 package com.github.jianqibot;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -25,6 +26,7 @@ public class MybatisCrawlerDao implements CrawlerDao{
     }
 
     @Override
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public String getUrlFromProcessingDBThenDelete() throws SQLException {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             String url = session.selectOne("com.github.jianqibot.MyMapper.getNextLink");
@@ -36,6 +38,7 @@ public class MybatisCrawlerDao implements CrawlerDao{
     }
 
     @Override
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public void insertLinkIntoProcessingDB(String href) throws SQLException {
         Map<String, String> param = new HashMap<>();
         param.put("tableName", "LINKS_TO_BE_PROCESSED");
@@ -46,6 +49,7 @@ public class MybatisCrawlerDao implements CrawlerDao{
     }
 
     @Override
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public void addLinkIntoProcessedDB(String link) throws SQLException {
         Map<String, String> param = new HashMap<>();
         param.put("tableName", "LINKS_ALREADY_PROCESSED");
@@ -56,6 +60,7 @@ public class MybatisCrawlerDao implements CrawlerDao{
     }
 
     @Override
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public boolean isLinkAlreadyProcessed(String link) throws SQLException {
         try (SqlSession session = sqlSessionFactory.openSession()) {
             int count = session.selectOne("com.github.jianqibot.MyMapper.countLink");
@@ -64,6 +69,7 @@ public class MybatisCrawlerDao implements CrawlerDao{
     }
 
     @Override
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public void addLinkIntoNewsDB(String title, String content, String link) throws SQLException {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             session.insert("com.github.jianqibot.MyMapper.insertNewsLink", new News(title, content, link));
