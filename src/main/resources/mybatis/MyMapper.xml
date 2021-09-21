@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.jianqibot.MyMapper">
+    <select id="getNextLink" resultType="String">
+        select link from LINKS_TO_BE_PROCESSED limit 1
+    </select>
+    <delete id="deleteLink" parameterType="String">
+        delete from LINKS_TO_BE_PROCESSED where link = #{link}
+    </delete>
+    <select id="countLink" parameterType="String" resultType="int">
+        select count(link) from LINKS_ALREADY_PROCESSED where link = #{link}
+    </select>
+    <insert id="insertNewsLink" parameterType="com.github.jianqibot.News">
+        insert into NEWS (title, content, url, created_at, modified_at) values(#{title}, #{content}, #{url}, now(), now())
+    </insert>
+    <insert id="insertLink" parameterType="HashMap">
+        insert into
+        <choose>
+            <when test="tableName == 'LINKS_ALREADY_PROCESSED'">
+                LINKS_ALREADY_PROCESSED
+            </when>
+            <when test="tableName == 'LINKS_TO_BE_PROCESSED'">
+                LINKS_TO_BE_PROCESSED
+            </when>
+        </choose>
+        (link) values (#{link})
+    </insert>
+</mapper>
