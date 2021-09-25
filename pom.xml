@@ -95,6 +95,12 @@
             <artifactId>mybatis</artifactId>
             <version>3.5.7</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.26</version>
+        </dependency>
 
     </dependencies>
 
@@ -159,8 +165,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>8.0.0-beta1</version>
                 <configuration>
-                    <url>jdbc:h2:file://home/jianqi/IdeaProjects/XDML-crawler/news</url>
-                    <user>jianqi</user>
+                    <!-- <url>jdbc:h2:file://home/jianqi/IdeaProjects/XDML-crawler/news</url> -->
+                    <url>jdbc:mysql://localhost:3306/news</url>
+                    <user>root</user>
                     <password>jianqi</password>
                 </configuration>
                 <dependencies>
@@ -168,6 +175,12 @@
                         <groupId>com.h2database</groupId>
                         <artifactId>h2</artifactId>
                         <version>1.4.200</version>
+                    </dependency>
+                    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>8.0.26</version>
                     </dependency>
                 </dependencies>
             </plugin>

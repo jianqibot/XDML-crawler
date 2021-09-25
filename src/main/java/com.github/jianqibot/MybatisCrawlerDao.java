@@ -27,7 +27,7 @@ public class MybatisCrawlerDao implements CrawlerDao{
 
     @Override
     @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
-    public String getUrlFromProcessingDBThenDelete() throws SQLException {
+    public synchronized String getUrlFromProcessingDBThenDelete() throws SQLException {
         try (SqlSession session = sqlSessionFactory.openSession(true)) {
             String url = session.selectOne("com.github.jianqibot.MyMapper.getNextLink");
             if (url != null) {
