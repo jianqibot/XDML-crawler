@@ -1,5 +1,6 @@
 package com.github.jianqibot;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class Crawler extends Thread {
     private final CrawlerDao dao;
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public Crawler(CrawlerDao dao) {
         this.dao = dao;
     }
