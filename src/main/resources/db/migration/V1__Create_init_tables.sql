@@ -11,6 +11,6 @@ id bigint primary key auto_increment,
 title varchar(200),
 content text,
 url varchar(1000),
-created_at timestamp,
-modified_at timestamp
-);
+created_at timestamp default now(),
+modified_at timestamp default now()
+) default CHARSET=utf8mb4;

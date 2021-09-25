@@ -1,5 +1,6 @@
 package com.github.jianqibot;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -15,26 +16,31 @@ import java.sql.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Crawler {
-    private final CrawlerDao dao = new MybatisCrawlerDao();
+public class Crawler extends Thread {
+    private final CrawlerDao dao;
 
-    public void run() throws IOException, SQLException {
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
+    public Crawler(CrawlerDao dao) {
+        this.dao = dao;
+    }
+
+    @Override
+    public void run() {
         String link;
-        while ((link = dao.getUrlFromProcessingDBThenDelete()) != null) {
-            if (!dao.isLinkAlreadyProcessed(link) && meetCriterion(link)) {
-                System.out.println(link);
-                dao.addLinkIntoProcessedDB(link);
-                Document doc = httpGetAndParseHtml(link);
-                CollectLinksAndStoreIntoProcessingDB(doc);
-                storeIntoDBIfIsNewsPage(doc, link);
+        try {
+            while ((link = dao.getUrlFromProcessingDBThenDelete()) != null) {
+                if (!dao.isLinkAlreadyProcessed(link) && meetCriterion(link)) {
+                    System.out.println(link);
+                    dao.addLinkIntoProcessedDB(link);
+                    Document doc = httpGetAndParseHtml(link);
+                    CollectLinksAndStoreIntoProcessingDB(doc);
+                    storeIntoDBIfIsNewsPage(doc, link);
+                }
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
-
-    public static void main(String[] args) throws SQLException, IOException {
-        new Crawler().run();
-    }
-
 
     private boolean meetCriterion(String link) {
         return (isNewsPage(link) || isHomePage(link)) && !isLoginPage(link);
