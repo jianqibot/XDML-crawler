@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.github.jianqibot.MockMapper">
+    <select id="countTotalLink" resultType="int">
+        select count(id) from NEWS
+    </select>
+    <select id="getRandomLink" parameterType="int" resultType="com.github.jianqibot.News">
+        select * from NEWS where id = #{id}
+    </select>
+    <select id="getLargeNumberOfLink"  resultType="com.github.jianqibot.News">
+        select * from NEWS limit 2000
+    </select>
+    <insert id="insertMockedNewsLink" parameterType="com.github.jianqibot.News">
+        insert into NEWS (title, content, url, created_at, modified_at) values(#{title}, #{content}, #{url}, #{createdAt}, #{modifiedAt})
+    </insert>
+</mapper>
