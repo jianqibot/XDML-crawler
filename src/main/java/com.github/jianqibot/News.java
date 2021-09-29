@@ -10,6 +10,7 @@ public class News {
     private Instant createdAt;
     private Instant modifiedAt;
 
+
     public News(String title, String content, String url) {
         this.title = title;
         this.content = content;
@@ -63,6 +64,7 @@ public class News {
     public void setModifiedAt(Instant modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
+
 }
 
 
